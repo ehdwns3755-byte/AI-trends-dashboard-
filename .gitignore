@@ -36,3 +36,4 @@ Thumbs.db
 # Project specific
 ai_trends_data.json
 ai_dashboard.html
+logs/
