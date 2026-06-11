@@ -10,6 +10,7 @@ from datetime import datetime
 from html import escape
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 class AITrendsDashboard:
     def __init__(self):
@@ -60,7 +61,7 @@ class AITrendsDashboard:
             logging.error(f"Unexpected error fetching Google News: {e}")
 
     def fetch_hacker_news(self):
-        """Fetch AI-related stories from Hacker News using official API"""
+        """Fetch AI-related stories from Hacker News using official API with parallel requests"""
         try:
             url = 'https://hacker-news.firebaseio.com/v0/topstories.json'
             response = requests.get(url, timeout=10)
@@ -71,29 +72,42 @@ class AITrendsDashboard:
                 logging.warning("No stories found in Hacker News API")
                 return
 
-            for story_id in story_ids:
-                story_url = f'https://hacker-news.firebaseio.com/v0/item/{story_id}.json'
-                story_response = requests.get(story_url, timeout=10)
-                story_response.raise_for_status()
-                story = story_response.json()
+            def fetch_story(story_id):
+                """Fetch individual story data"""
+                try:
+                    story_url = f'https://hacker-news.firebaseio.com/v0/item/{story_id}.json'
+                    story_response = requests.get(story_url, timeout=10)
+                    story_response.raise_for_status()
+                    return story_response.json()
+                except Exception:
+                    return None
 
-                if not story:
-                    continue
+            hn_count = len([x for x in self.news_items if x['source'] == 'Hacker News'])
 
-                title = story.get('title', '')
-                if any(keyword in title.lower() for keyword in ['ai', 'ml', 'llm', 'neural', 'gpt', 'claude']):
-                    story_link = story.get('url', f"https://news.ycombinator.com/item?id={story_id}")
-                    story_date = datetime.fromtimestamp(story.get('time', 0)).strftime('%Y-%m-%d')
-                    self.news_items.append({
-                        'title': title,
-                        'link': story_link,
-                        'source': 'Hacker News',
-                        'category': self._categorize(title),
-                        'date': story_date,
-                        'summary': ''
-                    })
-                    if len([x for x in self.news_items if x['source'] == 'Hacker News']) >= 10:
+            with ThreadPoolExecutor(max_workers=5) as executor:
+                futures = {executor.submit(fetch_story, sid): sid for sid in story_ids}
+
+                for future in as_completed(futures):
+                    if hn_count >= 10:
                         break
+
+                    story = future.result()
+                    if not story:
+                        continue
+
+                    title = story.get('title', '')
+                    if any(keyword in title.lower() for keyword in ['ai', 'ml', 'llm', 'neural', 'gpt', 'claude']):
+                        story_link = story.get('url', f"https://news.ycombinator.com/item?id={futures[future]}")
+                        story_date = datetime.fromtimestamp(story.get('time', 0)).strftime('%Y-%m-%d')
+                        self.news_items.append({
+                            'title': title,
+                            'link': story_link,
+                            'source': 'Hacker News',
+                            'category': self._categorize(title),
+                            'date': story_date,
+                            'summary': ''
+                        })
+                        hn_count += 1
         except requests.Timeout:
             logging.error("Timeout while fetching Hacker News")
         except requests.RequestException as e:
