@@ -6,7 +6,7 @@ import feedparser
 import json
 import os
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime
 from html import escape
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
@@ -60,29 +60,40 @@ class AITrendsDashboard:
             logging.error(f"Unexpected error fetching Google News: {e}")
 
     def fetch_hacker_news(self):
-        """Fetch AI-related stories from Hacker News"""
+        """Fetch AI-related stories from Hacker News using official API"""
         try:
-            url = 'https://news.ycombinator.com/newest'
-            headers = {'User-Agent': 'Mozilla/5.0 (compatible; AITrendsDashboard/1.0)'}
-            response = requests.get(url, headers=headers, timeout=10)
+            url = 'https://hacker-news.firebaseio.com/v0/topstories.json'
+            response = requests.get(url, timeout=10)
             response.raise_for_status()
-            soup = BeautifulSoup(response.content, 'html.parser')
+            story_ids = response.json()[:30]
 
-            stories = soup.find_all('span', class_='titleline')[:10]
-            for story in stories:
-                link_elem = story.find('a')
-                if link_elem:
-                    title = link_elem.get_text()
-                    if any(keyword in title.lower() for keyword in ['ai', 'ml', 'llm', 'neural', 'gpt', 'claude']):
-                        date_str = self._extract_hacker_news_date(story)
-                        self.news_items.append({
-                            'title': title,
-                            'link': link_elem.get('href', ''),
-                            'source': 'Hacker News',
-                            'category': self._categorize(title),
-                            'date': date_str,
-                            'summary': ''
-                        })
+            if not story_ids:
+                logging.warning("No stories found in Hacker News API")
+                return
+
+            for story_id in story_ids:
+                story_url = f'https://hacker-news.firebaseio.com/v0/item/{story_id}.json'
+                story_response = requests.get(story_url, timeout=10)
+                story_response.raise_for_status()
+                story = story_response.json()
+
+                if not story:
+                    continue
+
+                title = story.get('title', '')
+                if any(keyword in title.lower() for keyword in ['ai', 'ml', 'llm', 'neural', 'gpt', 'claude']):
+                    story_link = story.get('url', f"https://news.ycombinator.com/item?id={story_id}")
+                    story_date = datetime.fromtimestamp(story.get('time', 0)).strftime('%Y-%m-%d')
+                    self.news_items.append({
+                        'title': title,
+                        'link': story_link,
+                        'source': 'Hacker News',
+                        'category': self._categorize(title),
+                        'date': story_date,
+                        'summary': ''
+                    })
+                    if len([x for x in self.news_items if x['source'] == 'Hacker News']) >= 10:
+                        break
         except requests.Timeout:
             logging.error("Timeout while fetching Hacker News")
         except requests.RequestException as e:
@@ -166,33 +177,6 @@ class AITrendsDashboard:
             return 'AI Startups'
         else:
             return 'General AI'
-
-    def _extract_hacker_news_date(self, story_elem):
-        """Extract actual publication date from Hacker News story element"""
-        try:
-            parent = story_elem.find_parent('tr')
-            if not parent:
-                return datetime.now().strftime('%Y-%m-%d')
-
-            subtext = parent.find_next('tr')
-            if not subtext:
-                return datetime.now().strftime('%Y-%m-%d')
-
-            age_elem = subtext.find('span', class_='age')
-            if age_elem:
-                title_text = age_elem.get_text()
-                if 'hour' in title_text or 'minute' in title_text or 'second' in title_text:
-                    return datetime.now().strftime('%Y-%m-%d')
-                elif 'day' in title_text:
-                    try:
-                        days_ago = int(title_text.split()[0])
-                        return (datetime.now() - timedelta(days=days_ago)).strftime('%Y-%m-%d')
-                    except (ValueError, IndexError):
-                        return datetime.now().strftime('%Y-%m-%d')
-            return datetime.now().strftime('%Y-%m-%d')
-        except Exception as e:
-            logging.debug(f"Error extracting Hacker News date: {e}")
-            return datetime.now().strftime('%Y-%m-%d')
 
     def save_data(self):
         """Save collected data to JSON"""

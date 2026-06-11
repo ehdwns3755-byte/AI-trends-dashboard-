@@ -24,14 +24,35 @@ pip install -r requirements.txt
 ```
 
 ### 3. Windows 작업 스케줄러 설정 (관리자 권한 필요)
-PowerShell을 **관리자로 실행**한 후:
-```powershell
-# 실행 정책 변경 (한 번만 필요)
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
-# 스케줄러 설정 실행
-.\setup_scheduler.ps1
-```
+1. **PowerShell을 관리자로 실행**
+   - Windows 검색 → "PowerShell" 검색
+   - 마우스 우클릭 → "관리자 권한으로 실행"
+
+2. **현재 실행 정책 확인** (선택사항)
+   ```powershell
+   Get-ExecutionPolicy
+   ```
+
+3. **실행 정책 변경** (첫 번째만 필요)
+   ```powershell
+   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+   Y (예) 선택
+   ```
+
+4. **프로젝트 디렉토리로 이동**
+   ```powershell
+   cd C:\Users\Admin\Desktop\AI
+   ```
+
+5. **스케줄러 설정 실행**
+   ```powershell
+   .\setup_scheduler.ps1
+   ```
+
+6. **성공 확인**
+   - 콘솔에 "✅ 작업이 성공적으로 등록되었습니다!" 메시지 표시
+   - 작업 스케줄러(`taskschd.msc`)에서 "AI-Trends-Daily-Dashboard" 작업 확인
 
 ## 📖 사용법
 

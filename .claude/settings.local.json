@@ -6,7 +6,25 @@
       "Bash(python ai_trends_dashboard.py)",
       "PowerShell(python --version)",
       "Bash(git add *)",
-      "Bash(git commit -m 'Initial commit: AI Trends Daily Dashboard system *)"
+      "Bash(git commit -m 'Initial commit: AI Trends Daily Dashboard system *)",
+      "Bash(git remote *)",
+      "Bash(git branch *)",
+      "Bash(git push *)",
+      "Bash(curl --version)",
+      "Bash(git commit -m 'docs: Add detailed issues list for code review *)",
+      "mcp__Claude_in_Chrome__list_connected_browsers",
+      "Bash(where gh *)",
+      "Bash(git credential *)",
+      "Bash(curl -s https://api.github.com/user -H \"Authorization: token $\\(git config --global github.token\\)\")",
+      "Bash(cmdkey /list)",
+      "WebFetch(domain:github.com)",
+      "Bash(curl -s https://api.github.com/repos/ehdwns3755-byte/AI-/issues)",
+      "Bash(python3 -m json.tool)",
+      "Skill(claude-api)",
+      "Skill(claude-api:*)",
+      "Bash(mkdir -p \".claude/skills/code-audit-and-github-issues\")",
+      "Bash(git commit -m ' *)",
+      "Bash(gh issue *)"
     ]
   }
 }

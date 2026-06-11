@@ -1,0 +1,44 @@
+[
+  {
+    "title": "[Phase 1] Initialize Repository",
+    "body": "## What\nSet up a clean git repository with proper configuration files and documentation.\n\n## Why\nEstablishes the foundation for the AI Trends Dashboard project.\n\n## Acceptance Criteria\n- [ ] Local git repository initialized\n- [ ] `.gitignore` configured for Python projects\n- [ ] `README.md` written with setup instructions\n- [ ] Initial commit made\n- [ ] Repository pushed to GitHub\n\n## Implementation Plan\n1. Run `git init`\n2. Create `.gitignore` with Python patterns\n3. Create comprehensive `README.md`\n4. Make initial commit\n5. Push to GitHub (https://github.com/ehdwns3755-byte/AI-)\n\n## Estimated Effort\n2 hours\n\n## Related Issues\nBlocks: #2, #3",
+    "labels": ["epic:setup", "priority:high", "area:infra"],
+    "milestone": "v1.0"
+  },
+  {
+    "title": "[Phase 1] Create requirements.txt",
+    "body": "## What\nDefine Python dependencies for the project.\n\n## Why\nAllows team members to quickly set up identical development environments.\n\n## Dependencies\n- requests (HTTP library for API calls)\n- beautifulsoup4 (HTML parsing)\n- feedparser (RSS feed parsing)\n\n## Acceptance Criteria\n- [ ] `requirements.txt` created with correct versions\n- [ ] All packages install without errors\n- [ ] Tested in clean virtual environment\n\n## Estimated Effort\n1 hour\n\n## Related Issues\nDepends on: #1\nBlocks: #3",
+    "labels": ["epic:setup", "priority:high", "area:backend"],
+    "milestone": "v1.0"
+  },
+  {
+    "title": "[Phase 2] Implement News Collection (Google News, Hacker News, Product Hunt, Reddit)",
+    "body": "## What\nImplement core news fetching from 4 sources.\n\n## Why\nProvides diverse AI news coverage for the dashboard.\n\n## Sources\n1. **Google News** - RSS feed\n2. **Hacker News** - API (top stories)\n3. **Product Hunt** - API (tech products)\n4. **Reddit** - Web scraping (r/MachineLearning, r/LanguageModels)\n\n## Acceptance Criteria\n- [ ] All 4 sources return news items\n- [ ] Data stored in `ai_trends_data.json`\n- [ ] Duplicate detection works\n- [ ] Minimum 40 unique articles collected\n- [ ] Error handling for API failures\n\n## Implementation Plan\n1. Create `ai_trends_dashboard.py` main class\n2. Implement `fetch_google_news()` using feedparser\n3. Implement `fetch_hacker_news()` using API\n4. Implement `fetch_product_hunt()` using API\n5. Implement `fetch_reddit()` using PRAW or requests\n6. Combine results and save to JSON\n\n## Estimated Effort\n4 hours\n\n## Related Issues\nDepends on: #1, #2\nBlocks: #4, #5",
+    "labels": ["epic:features", "priority:high", "area:backend"],
+    "milestone": "v1.0"
+  },
+  {
+    "title": "[Phase 2] Generate Responsive HTML Dashboard",
+    "body": "## What\nCreate a visually appealing HTML dashboard to display collected news.\n\n## Why\nProvides a clean interface for users to browse AI news.\n\n## Features\n- Responsive design (mobile, tablet, desktop)\n- Dark mode support\n- News items as readable cards\n- Links to original sources\n- Category tags (LLM, Vision, Automation, etc.)\n- Auto-refresh capability (meta refresh)\n\n## Acceptance Criteria\n- [ ] HTML file `ai_dashboard.html` generates correctly\n- [ ] Responsive design works on all screen sizes\n- [ ] Dark mode toggles properly\n- [ ] All news items visible with clickable links\n- [ ] Renders in Chrome, Firefox, Safari\n- [ ] Page loads in <2 seconds\n\n## Estimated Effort\n3 hours\n\n## Related Issues\nDepends on: #3\nBlocks: #6",
+    "labels": ["epic:features", "priority:high", "area:frontend"],
+    "milestone": "v1.0"
+  },
+  {
+    "title": "[Phase 2] Implement Duplicate Detection & Data Processing",
+    "body": "## What\nRemove duplicate news and organize by date and category.\n\n## Why\nImproves dashboard quality by preventing duplicate articles and organizing content.\n\n## Features\n- Title-based duplicate detection\n- Sort by date (newest first)\n- Basic category classification\n\n## Acceptance Criteria\n- [ ] Exact title matches are detected and removed\n- [ ] Only first occurrence is kept\n- [ ] Articles sorted chronologically\n- [ ] Deduplication reduces count by 10-20%\n\n## Implementation Plan\n1. Implement `_remove_duplicates()` method\n2. Use set for O(1) lookup\n3. Add sorting by date\n4. Log deduplication statistics\n\n## Estimated Effort\n2 hours\n\n## Related Issues\nDepends on: #3\nBlocks: #4",
+    "labels": ["epic:features", "priority:medium", "area:backend"],
+    "milestone": "v1.0"
+  },
+  {
+    "title": "[Phase 3] Set up Windows Task Scheduler Automation",
+    "body": "## What\nCreate PowerShell script to configure Windows Task Scheduler for daily 8 AM execution.\n\n## Why\nEnables fully automated news collection without manual intervention.\n\n## Features\n- Daily execution at 8:00 AM\n- Logging to file\n- Error handling\n- Uninstall option\n\n## Acceptance Criteria\n- [ ] `setup_scheduler.ps1` script created\n- [ ] Scheduled task registers successfully\n- [ ] Task runs daily at 8 AM\n- [ ] Output logged to `ai_trends.log`\n- [ ] Tested on Windows 10/11\n\n## Implementation Plan\n1. Create `setup_scheduler.ps1`\n2. Configure ScheduledTaskAction\n3. Set up daily trigger at 8 AM\n4. Configure logging\n5. Create uninstall function\n6. Test execution\n\n## Estimated Effort\n2 hours\n\n## Related Issues\nDepends on: #3, #4, #5\nBlocks: #7",
+    "labels": ["epic:automation", "priority:high", "area:devops"],
+    "milestone": "v1.0"
+  },
+  {
+    "title": "[Phase 3] Complete Testing & Documentation",
+    "body": "## What\nTest the complete system and finalize documentation.\n\n## Why\nEnsures reliability and provides clear setup instructions for users.\n\n## Testing Checklist\n- [ ] Manual script execution produces HTML\n- [ ] Scheduled task runs at correct time\n- [ ] HTML displays in browser correctly\n- [ ] Logs are generated with expected format\n- [ ] All features work as expected\n\n## Documentation\n- [ ] README.md updated with complete setup steps\n- [ ] Troubleshooting guide added\n- [ ] Screenshots of final dashboard\n- [ ] Installation instructions verified\n\n## Acceptance Criteria\n- [ ] All manual tests pass\n- [ ] Scheduled automation verified working\n- [ ] Documentation complete and clear\n- [ ] Repository ready for public use\n\n## Estimated Effort\n2 hours\n\n## Related Issues\nDepends on: #6\nCompletes: v1.0",
+    "labels": ["epic:automation", "priority:high", "area:testing"],
+    "milestone": "v1.0"
+  }
+]
