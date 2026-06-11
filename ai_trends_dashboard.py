@@ -18,8 +18,28 @@ class AITrendsDashboard:
         self.data_file = os.path.join(self.script_dir, 'ai_trends_data.json')
         self.html_file = os.path.join(self.script_dir, 'ai_dashboard.html')
         self.log_file = os.path.join(self.script_dir, 'ai_trends.log')
+        self.config_file = os.path.join(self.script_dir, 'config.json')
         self.news_items = []
+        self.config = self._load_config()
         self._setup_logging()
+
+    def _load_config(self):
+        """Load configuration from config.json"""
+        try:
+            if os.path.exists(self.config_file):
+                with open(self.config_file, 'r', encoding='utf-8') as f:
+                    return json.load(f)
+        except Exception as e:
+            print(f"Warning: Failed to load config.json: {e}. Using defaults.")
+
+        return {
+            'sources': {
+                'google_news': {'limit': 15, 'timeout': 10},
+                'hacker_news': {'limit': 10, 'timeout': 10, 'max_workers': 5},
+                'product_hunt': {'limit': 10, 'timeout': 10},
+                'reddit': {'limit': 10, 'timeout': 10}
+            }
+        }
 
     def _setup_logging(self):
         """Configure logging to both file and console"""
@@ -35,8 +55,12 @@ class AITrendsDashboard:
     def fetch_google_news(self):
         """Fetch AI news from Google News"""
         try:
-            url = 'https://news.google.com/rss/search?q=artificial+intelligence+OR+machine+learning+OR+AI&hl=en-US&gl=US&ceid=US:en'
-            response = requests.get(url, timeout=10)
+            config = self.config.get('sources', {}).get('google_news', {})
+            url = config.get('url', 'https://news.google.com/rss/search?q=artificial+intelligence+OR+machine+learning+OR+AI&hl=en-US&gl=US&ceid=US:en')
+            limit = config.get('limit', 15)
+            timeout = config.get('timeout', 10)
+
+            response = requests.get(url, timeout=timeout)
             response.raise_for_status()
             feed = feedparser.parse(response.content)
 
@@ -44,7 +68,7 @@ class AITrendsDashboard:
                 logging.warning("No entries found in Google News feed")
                 return
 
-            for entry in feed.entries[:15]:
+            for entry in feed.entries[:limit]:
                 self.news_items.append({
                     'title': entry.get('title', ''),
                     'link': entry.get('link', ''),
@@ -63,8 +87,14 @@ class AITrendsDashboard:
     def fetch_hacker_news(self):
         """Fetch AI-related stories from Hacker News using official API with parallel requests"""
         try:
-            url = 'https://hacker-news.firebaseio.com/v0/topstories.json'
-            response = requests.get(url, timeout=10)
+            config = self.config.get('sources', {}).get('hacker_news', {})
+            url_ids = config.get('url_ids', 'https://hacker-news.firebaseio.com/v0/topstories.json')
+            url_item = config.get('url_item', 'https://hacker-news.firebaseio.com/v0/item/{story_id}.json')
+            limit = config.get('limit', 10)
+            timeout = config.get('timeout', 10)
+            max_workers = config.get('max_workers', 5)
+
+            response = requests.get(url_ids, timeout=timeout)
             response.raise_for_status()
             story_ids = response.json()[:30]
 
@@ -75,8 +105,8 @@ class AITrendsDashboard:
             def fetch_story(story_id):
                 """Fetch individual story data"""
                 try:
-                    story_url = f'https://hacker-news.firebaseio.com/v0/item/{story_id}.json'
-                    story_response = requests.get(story_url, timeout=10)
+                    story_url = url_item.format(story_id=story_id)
+                    story_response = requests.get(story_url, timeout=timeout)
                     story_response.raise_for_status()
                     return story_response.json()
                 except Exception:
@@ -84,11 +114,11 @@ class AITrendsDashboard:
 
             hn_count = len([x for x in self.news_items if x['source'] == 'Hacker News'])
 
-            with ThreadPoolExecutor(max_workers=5) as executor:
+            with ThreadPoolExecutor(max_workers=max_workers) as executor:
                 futures = {executor.submit(fetch_story, sid): sid for sid in story_ids}
 
                 for future in as_completed(futures):
-                    if hn_count >= 10:
+                    if hn_count >= limit:
                         break
 
                     story = future.result()
@@ -118,8 +148,12 @@ class AITrendsDashboard:
     def fetch_product_hunt(self):
         """Fetch AI products from Product Hunt"""
         try:
-            url = 'https://www.producthunt.com/feed'
-            response = requests.get(url, timeout=10)
+            config = self.config.get('sources', {}).get('product_hunt', {})
+            url = config.get('url', 'https://www.producthunt.com/feed')
+            limit = config.get('limit', 10)
+            timeout = config.get('timeout', 10)
+
+            response = requests.get(url, timeout=timeout)
             response.raise_for_status()
             feed = feedparser.parse(response.content)
 
@@ -127,7 +161,7 @@ class AITrendsDashboard:
                 logging.warning("No entries found in Product Hunt feed")
                 return
 
-            for entry in feed.entries[:10]:
+            for entry in feed.entries[:limit]:
                 title = entry.get('title', '')
                 if any(keyword in title.lower() for keyword in ['ai', 'gpt', 'llm', 'ml']):
                     self.news_items.append({
@@ -148,9 +182,13 @@ class AITrendsDashboard:
     def fetch_reddit(self):
         """Fetch AI discussions from Reddit"""
         try:
-            url = 'https://www.reddit.com/r/MachineLearning/new.json'
+            config = self.config.get('sources', {}).get('reddit', {})
+            url = config.get('url', 'https://www.reddit.com/r/MachineLearning/new.json')
+            limit = config.get('limit', 10)
+            timeout = config.get('timeout', 10)
             headers = {'User-Agent': 'Mozilla/5.0 (compatible; AITrendsDashboard/1.0)'}
-            response = requests.get(url, headers=headers, timeout=10)
+
+            response = requests.get(url, headers=headers, timeout=timeout)
             response.raise_for_status()
             data = response.json()
 
@@ -159,7 +197,7 @@ class AITrendsDashboard:
                 logging.warning("No posts found in Reddit feed")
                 return
 
-            for post in children[:10]:
+            for post in children[:limit]:
                 post_data = post.get('data', {})
                 self.news_items.append({
                     'title': post_data.get('title', ''),
@@ -177,20 +215,15 @@ class AITrendsDashboard:
             logging.error(f"Unexpected error fetching Reddit: {e}")
 
     def _categorize(self, text):
-        """Categorize news based on keywords"""
+        """Categorize news based on keywords from config"""
         text = text.lower()
-        if any(word in text for word in ['llm', 'gpt', 'transformer', 'language model', 'chatgpt', 'claude']):
-            return 'Large Language Models'
-        elif any(word in text for word in ['computer vision', 'image', 'video', 'neural network']):
-            return 'Computer Vision'
-        elif any(word in text for word in ['robot', 'automation', 'agent']):
-            return 'Automation & Robotics'
-        elif any(word in text for word in ['multimodal', 'vision']):
-            return 'Multimodal AI'
-        elif any(word in text for word in ['startup', 'funding', 'investment']):
-            return 'AI Startups'
-        else:
-            return 'General AI'
+        categories = self.config.get('categories', {})
+
+        for category, keywords in categories.items():
+            if any(word in text for word in keywords):
+                return category
+
+        return 'General AI'
 
     def save_data(self):
         """Save collected data to JSON"""

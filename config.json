@@ -1,0 +1,80 @@
+{
+  "sources": {
+    "google_news": {
+      "url": "https://news.google.com/rss/search?q=artificial+intelligence+OR+machine+learning+OR+AI&hl=en-US&gl=US&ceid=US:en",
+      "limit": 15,
+      "timeout": 10
+    },
+    "hacker_news": {
+      "url_ids": "https://hacker-news.firebaseio.com/v0/topstories.json",
+      "url_item": "https://hacker-news.firebaseio.com/v0/item/{story_id}.json",
+      "limit": 10,
+      "timeout": 10,
+      "max_workers": 5
+    },
+    "product_hunt": {
+      "url": "https://www.producthunt.com/feed",
+      "limit": 10,
+      "timeout": 10
+    },
+    "reddit": {
+      "url": "https://www.reddit.com/r/MachineLearning/new.json",
+      "limit": 10,
+      "timeout": 10
+    }
+  },
+  "categories": {
+    "Large Language Models": [
+      "llm",
+      "gpt",
+      "transformer",
+      "language model",
+      "chatgpt",
+      "claude"
+    ],
+    "Computer Vision": [
+      "computer vision",
+      "image",
+      "video",
+      "neural network"
+    ],
+    "Automation & Robotics": [
+      "robot",
+      "automation",
+      "agent"
+    ],
+    "Multimodal AI": [
+      "multimodal",
+      "vision"
+    ],
+    "AI Startups": [
+      "startup",
+      "funding",
+      "investment"
+    ]
+  },
+  "keywords": {
+    "ai_related": [
+      "ai",
+      "ml",
+      "llm",
+      "neural",
+      "gpt",
+      "claude"
+    ]
+  },
+  "dashboard": {
+    "refresh_interval": 3600,
+    "max_items_per_category": 6,
+    "items_per_source": {
+      "google_news": 15,
+      "hacker_news": 10,
+      "product_hunt": 10,
+      "reddit": 10
+    }
+  },
+  "logging": {
+    "level": "INFO",
+    "format": "%(asctime)s - %(levelname)s - %(message)s"
+  }
+}
