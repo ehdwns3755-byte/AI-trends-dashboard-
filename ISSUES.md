@@ -1,188 +1,211 @@
-# AI Trends Dashboard - Issues & Implementation Tasks
+# GitHub Issues - AI Trends Dashboard
 
-## Overview
-AI Trends Dashboard is an automated system that collects AI news from multiple sources (Google News, Hacker News, Product Hunt, Reddit) every morning at 8 AM and generates a clean HTML dashboard.
+## 이전 이슈들 (완료됨)
 
----
-
-## Phase 1: Project Setup
-
-### Issue #1: Initialize Repository
-**Type:** Setup 🏗️  
-**Priority:** 🔴 High  
-**Status:** ⏳ Not Started
-
-#### Problem
-Project needs a clean git repository with proper configuration files and documentation.
-
-#### Solution
-1. Initialize git repository
-2. Create `.gitignore` for Python
-3. Create comprehensive `README.md`
-4. Make initial commit
-
-#### Expected Result
-- Git repository initialized
-- Proper configuration files in place
-- Clear documentation for users
+모든 초기 9개 이슈가 이미 완료되었습니다:
+- ✅ XSS 취약점 해결
+- ✅ 에러 처리 개선
+- ✅ 로깅 부재 해결
+- ✅ Hacker News 날짜 버그 수정
+- ✅ 타임아웃 설정 통일
+- ✅ 중복 제거 개선
+- ✅ robots.txt 미준수 해결
+- ✅ 빈 결과 처리 추가
+- ✅ README 가이드 개선
 
 ---
 
-### Issue #2: Create requirements.txt
-**Type:** Setup 🏗️  
-**Priority:** 🔴 High  
-**Status:** ⏳ Not Started
-**Depends on:** Issue #1
+## 새로운 개선 이슈들
 
-#### Problem
-Python dependencies need to be documented for environment setup.
+## Issue 1️⃣0️⃣: 중복 파일 정리: 이전 GitHub issue 생성 스크립트 제거
 
-#### Solution
-Create `requirements.txt` with:
-- requests
-- beautifulsoup4
-- feedparser
+**Type:** Chore 🧹
+**Priority:** 🟢 Low
 
-#### Expected Result
-- `requirements.txt` created
-- Packages install without errors
+### 문제
+create_issues.py, auto_create_issues.py, create_issues_api.py 등 여러 개의 레거시 스크립트가 있습니다.
+이들은 이전에 GitHub Issues를 자동으로 생성하기 위해 만들었으나, 현재는 사용되지 않습니다.
 
----
+### 위치
+- create_issues.py (252줄)
+- auto_create_issues.py (221줄)
+- create_issues_api.py (216줄)
 
-## Phase 2: Core Features
-
-### Issue #3: Implement News Collection
-**Type:** Feature ✨  
-**Priority:** 🔴 High  
-**Status:** ⏳ Not Started
-**Depends on:** Issue #1, #2
-
-#### Problem
-System needs to fetch AI news from 4 different sources.
-
-#### Solution
-Implement `ai_trends_dashboard.py` with:
-- `fetch_google_news()` - RSS feed
-- `fetch_hacker_news()` - API
-- `fetch_product_hunt()` - API
-- `fetch_reddit()` - Scraping
-- Combined data to `ai_trends_data.json`
-
-#### Expected Result
-- All 4 sources return news (40+ unique articles)
-- Data saved as JSON
-- Duplicate detection working
+### 해결책
+- 더 이상 필요 없는 파일들 제거
+- .gitignore 업데이트
+- 필요시 아카이브
 
 ---
 
-### Issue #4: Generate Responsive HTML Dashboard
-**Type:** Feature ✨  
-**Priority:** 🔴 High  
-**Status:** ⏳ Not Started
-**Depends on:** Issue #3
+## Issue 1️⃣1️⃣: 성능 개선: Hacker News API N+1 호출 문제
 
-#### Problem
-Users need a clean interface to browse collected news.
+**Type:** Improvement 📈
+**Priority:** 🟡 Medium
 
-#### Solution
-Create `generate_html()` with:
-- Responsive CSS grid
-- Dark mode toggle
-- News cards
-- HTML escaping for security
+### 문제
+현재 코드는 Hacker News에서:
+1. 30개의 story ID를 가져옴
+2. 각 ID에 대해 개별 API 호출 (30번의 HTTP 요청)
 
-#### Expected Result
-- `ai_dashboard.html` generates correctly
-- Mobile-friendly design
-- <2 second load time
-- No XSS vulnerabilities
+이는 불필요한 네트워크 호출을 많이 발생시킵니다. 실행 시간이 30초 이상 걸릴 수 있습니다.
 
----
+### 위치
+- ai_trends_dashboard.py, Line 74-96: fetch_hacker_news() 메서드
 
-### Issue #5: Implement Duplicate Detection
-**Type:** Feature ✨  
-**Priority:** 🟡 Medium  
-**Status:** ⏳ Not Started
-**Depends on:** Issue #3
+### 현재 코드 문제
+```python
+for story_id in story_ids:
+    story_response = requests.get(story_url, timeout=10)  # 각 ID마다 호출
+    # ...
+```
 
-#### Problem
-Same story appears from multiple sources.
-
-#### Solution
-Implement:
-- Title-based duplicate detection
-- Date sorting (newest first)
-- Basic categorization
-
-#### Expected Result
-- Duplicates removed
-- 10-20% reduction in items
-- Proper chronological order
+### 해결책
+- 병렬 요청 사용 (concurrent.futures 또는 asyncio)
+- 또는 배치 처리로 요청 수 줄이기
+- 결과 캐싱 추가
 
 ---
 
-## Phase 3: Automation
+## Issue 1️⃣2️⃣: 설정 외부화: 하드코딩된 값들을 설정 파일로 분리
 
-### Issue #6: Set up Windows Task Scheduler
-**Type:** Feature ✨  
-**Priority:** 🔴 High  
-**Status:** ⏳ Not Started
-**Depends on:** Issue #3, #4, #5
+**Type:** Improvement 📈
+**Priority:** 🟡 Medium
 
-#### Problem
-System needs to run automatically at 8 AM daily.
+### 문제
+코드에 하드코딩된 설정값들:
+- 각 뉴스 소스마다 가져올 항목 수 (10, 15, 30)
+- 카테고리 키워드 리스트
+- API URL들
+- 대시보드 업데이트 주기 (3600초)
+- 타임아웃 값 (10초)
 
-#### Solution
-Create `setup_scheduler.ps1` that:
-- Creates scheduled task
-- Sets 8 AM daily trigger
-- Configures logging
-- Includes uninstall
+### 위치
+- ai_trends_dashboard.py 전체 (여러 곳)
 
-#### Expected Result
-- PowerShell script created
-- Task runs daily at 8 AM
-- Logs all executions
-- Works on Windows 10/11
-
----
-
-### Issue #7: Complete Testing & Documentation
-**Type:** Testing 🧪  
-**Priority:** 🔴 High  
-**Status:** ⏳ Not Started
-**Depends on:** Issue #6
-
-#### Problem
-System needs testing and clear documentation.
-
-#### Solution
-1. Test manual execution
-2. Verify HTML dashboard
-3. Test scheduled task
-4. Complete README
-5. Add troubleshooting guide
-
-#### Expected Result
-- All tests passing
-- Complete documentation
-- Ready for public release
+### 해결책
+config.json 파일 생성:
+```json
+{
+  "sources": {
+    "google_news": {"limit": 15, "timeout": 10},
+    "hacker_news": {"limit": 10, "timeout": 10},
+    "product_hunt": {"limit": 10, "timeout": 10},
+    "reddit": {"limit": 10, "timeout": 10}
+  },
+  "categories": {
+    "Large Language Models": ["llm", "gpt", "transformer", "language model"],
+    "Computer Vision": ["computer vision", "image", "video"],
+    "Automation & Robotics": ["robot", "automation", "agent"]
+  },
+  "dashboard": {
+    "refresh_interval": 3600,
+    "max_items_per_category": 6
+  }
+}
+```
 
 ---
 
-## Progress Summary
+## Issue 1️⃣3️⃣: 테스트 부재: 단위 테스트 및 통합 테스트 추가
 
-| Issue | Title | Status | Priority |
-|-------|-------|--------|----------|
-| #1 | Initialize Repository | ⏳ | 🔴 High |
-| #2 | Create requirements.txt | ⏳ | 🔴 High |
-| #3 | Implement News Collection | ⏳ | 🔴 High |
-| #4 | Generate HTML Dashboard | ⏳ | 🔴 High |
-| #5 | Duplicate Detection | ⏳ | 🟡 Medium |
-| #6 | Task Scheduler Setup | ⏳ | 🔴 High |
-| #7 | Testing & Documentation | ⏳ | 🔴 High |
+**Type:** Improvement 📈
+**Priority:** 🟡 Medium
+
+### 문제
+프로젝트에 테스트가 전혀 없습니다:
+- 카테고리화 로직 테스트 없음
+- 데이터 필터링 로직 테스트 없음
+- HTML 생성 로직 테스트 없음
+- API 호출 에러 처리 테스트 없음
+- 중복 제거 로직 테스트 없음
+
+### 해결책
+pytest 추가:
+```bash
+pip install pytest pytest-mock
+```
+
+test_ai_trends.py 생성:
+- test_categorize(): 카테고리화 로직 검증
+- test_fetch_*(): API 호출 에러 처리
+- test_generate_html(): HTML 문법 검증 및 XSS 방지 검증
+- test_duplicate_removal(): 중복 제거 검증
 
 ---
 
-**Created**: 2026-06-11  
-**Repository**: https://github.com/ehdwns3755-byte/AI-
+## Issue 1️⃣4️⃣: 환경 변수 관리: 경로와 설정값을 환경 변수로
+
+**Type:** Improvement 📈
+**Priority:** 🟡 Medium
+
+### 문제
+하드코딩된 경로와 설정:
+- 스크립트 디렉토리 (현재 자동 감지하지만 명시적 설정 가능)
+- 데이터 파일 위치
+- 로그 파일 위치
+- API 타임아웃 값
+
+### 해결책
+.env 파일 사용:
+```
+DATA_DIR=./data
+LOG_DIR=./logs
+LOG_LEVEL=INFO
+API_TIMEOUT=10
+DEBUG=false
+```
+
+python-dotenv 사용:
+```python
+from dotenv import load_dotenv
+load_dotenv()
+timeout = int(os.getenv('API_TIMEOUT', '10'))
+```
+
+---
+
+## Issue 1️⃣5️⃣: 캐싱 메커니즘: 네트워크 실패 시 이전 데이터 사용
+
+**Type:** Improvement 📈
+**Priority:** 🟡 Medium
+
+### 문제
+모든 뉴스 수집이 실패하면 빈 대시보드가 생성됩니다.
+사용자는 이전 데이터를 보는 것이 낫습니다.
+
+### 위치
+- ai_trends_dashboard.py, run() 메서드
+
+### 해결책
+이전 데이터를 백업해놨다가 복구:
+```python
+def _load_previous_data(self):
+    """Load previous data if current fetch fails"""
+    backup_file = self.data_file + '.backup'
+    if os.path.exists(backup_file):
+        with open(backup_file) as f:
+            return json.load(f)
+    return {'items': []}
+
+# 수집 성공 후
+self._backup_data()
+```
+
+---
+
+## Summary
+
+| Issue | Type | Priority | 상태 |
+|-------|------|----------|------|
+| 중복 파일 정리 | Chore | 🟢 Low | TODO |
+| Hacker News 성능 | Improvement | 🟡 Medium | TODO |
+| 설정 외부화 | Improvement | 🟡 Medium | TODO |
+| 테스트 추가 | Improvement | 🟡 Medium | TODO |
+| 환경 변수 | Improvement | 🟡 Medium | TODO |
+| 캐싱 메커니즘 | Improvement | 🟡 Medium | TODO |
+
+---
+
+**생성 일시**: 2026-06-11
+**분석 도구**: code-audit-and-github-issues skill
