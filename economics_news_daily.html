@@ -6,46 +6,209 @@
     <title>경제뉴스 일일 정리 - 2026년 06월 12일</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif; background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); padding: 20px; min-height: 100vh; }
-        .container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 20px; padding: 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
-        .header { text-align: center; margin-bottom: 40px; border-bottom: 3px solid #1e3c72; padding-bottom: 30px; }
-        h1 { color: #1e3c72; font-size: 36px; margin-bottom: 10px; }
-        .date-info { color: #666; font-size: 16px; }
-        .date-info span { font-weight: 600; color: #1e3c72; }
-        .market-overview { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; padding: 30px; border-radius: 12px; margin: 40px 0; font-size: 16px; line-height: 1.8; }
-        .key-points { background: #f5f5f5; padding: 25px; border-radius: 12px; margin: 40px 0; border-left: 4px solid #1e3c72; }
-        .key-points h3 { color: #1e3c72; margin-bottom: 15px; font-size: 18px; }
-        .key-points ul { list-style: none; }
-        .key-points li { padding: 8px 0; padding-left: 24px; position: relative; color: #333; }
-        .key-points li:before { content: "→"; position: absolute; left: 0; color: #1e3c72; font-weight: bold; }
-        .section { margin-bottom: 50px; }
-        .section h2 { color: #1e3c72; font-size: 24px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #f0f0f0; }
-        .section .count { display: inline-block; background: #1e3c72; color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px; margin-left: 10px; }
-        .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
-        .card { border: 1px solid #e0e0e0; border-radius: 12px; padding: 20px; border-left: 4px solid #2a5298; }
-        .card:hover { box-shadow: 0 12px 40px rgba(30, 60, 114, 0.2); transform: translateY(-6px); }
-        .card-source { font-size: 11px; color: #1e3c72; font-weight: 600; text-transform: uppercase; margin-bottom: 8px; }
-        .card h3 { color: #333; font-size: 15px; margin-bottom: 10px; line-height: 1.4; font-weight: 600; }
-        .card p { font-size: 13px; color: #666; line-height: 1.6; }
-        .card-link { margin-top: 12px; padding-top: 12px; border-top: 1px solid #f0f0f0; }
-        .card a { color: #2a5298; text-decoration: none; font-size: 12px; font-weight: 600; }
-        .card a:hover { text-decoration: underline; }
-        .footer { text-align: center; margin-top: 60px; padding-top: 30px; border-top: 1px solid #e0e0e0; color: #999; font-size: 12px; }
-        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px; margin: 40px 0; }
-        .stat { background: #f5f5f5; padding: 15px; border-radius: 8px; text-align: center; }
-        .stat-num { font-size: 24px; font-weight: bold; color: #1e3c72; }
-        .stat-label { font-size: 12px; color: #999; margin-top: 5px; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #1e3c72;
+            padding-bottom: 30px;
+        }
+        h1 {
+            color: #1e3c72;
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        .date-info {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        .date-info span {
+            font-weight: 600;
+            color: #1e3c72;
+        }
+
+        .market-overview {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        .key-points {
+            background: #f5f5f5;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            border-left: 4px solid #1e3c72;
+        }
+        .key-points h3 {
+            color: #1e3c72;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .key-points ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .key-points li {
+            padding: 8px 0;
+            padding-left: 24px;
+            position: relative;
+            color: #333;
+        }
+        .key-points li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #1e3c72;
+            font-weight: bold;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+        .section h2 {
+            color: #1e3c72;
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        .section .count {
+            display: inline-block;
+            background: #1e3c72;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s;
+            background: white;
+            border-left: 4px solid #2a5298;
+            display: flex;
+            flex-direction: column;
+        }
+        .card:hover {
+            box-shadow: 0 12px 40px rgba(30, 60, 114, 0.2);
+            transform: translateY(-6px);
+        }
+        .card-source {
+            font-size: 11px;
+            color: #1e3c72;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        .card h3 {
+            color: #333;
+            font-size: 15px;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            font-weight: 600;
+        }
+        .card p {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+            flex-grow: 1;
+        }
+        .card-link {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #f0f0f0;
+        }
+        .card a {
+            color: #2a5298;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .card a:hover {
+            text-decoration: underline;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .stat {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .stat-num {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1e3c72;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 1px solid #e0e0e0;
+            color: #999;
+            font-size: 12px;
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- 헤더 -->
         <div class="header">
-            <h1>경제뉴스 일일 정리</h1>
+            <h1>📊 경제뉴스 일일 정리</h1>
             <div class="date-info">
-                <span>2026년 06월 12일</span> | 15:10 업데이트
+                <span>2026년 06월 12일</span> | 15:38 업데이트
             </div>
         </div>
 
+        <!-- 시장 개요 -->
         <div class="market-overview">
             <strong>오늘의 시장 요약</strong>
             <p style="margin-top: 12px; margin-bottom: 0;">
@@ -53,8 +216,9 @@
             </p>
         </div>
 
+        <!-- 핵심 포인트 -->
         <div class="key-points">
-            <h3>주요 포인트</h3>
+            <h3>📍 주요 포인트</h3>
             <ul>
                 <li>기술주가 시장을 주도하고 있습니다</li>
                 <li>금리 인하 기대감이 높아지고 있습니다</li>
@@ -63,120 +227,60 @@
             </ul>
         </div>
 
+        <!-- 통계 -->
         <div class="stats">
             <div class="stat">
-                <div class="stat-num">3</div>
+                <div class="stat-num">1</div>
                 <div class="stat-label">기술/IT</div>
             </div>
             <div class="stat">
                 <div class="stat-num">2</div>
                 <div class="stat-label">금융/증권</div>
             </div>
-            <div class="stat">
-                <div class="stat-num">1</div>
-                <div class="stat-label">통화/환율</div>
-            </div>
-            <div class="stat">
-                <div class="stat-num">4</div>
-                <div class="stat-label">기타</div>
-            </div>
         </div>
+
+        <!-- 뉴스 섹션 -->
         <div class="section">
-            <h2>기술/IT<span class="count">3개</span></h2>
+            <h2>기술/IT<span class="count">1개</span></h2>
             <div class="cards">
                 <div class="card">
-                    <div class="card-source">블룸버그</div>
-                    <h3>Air India Crash Investigation Report: What Went Wrong?</h3>
-                    <p>One year after India’s deadliest Boeing 787 crash, the final report is still delayed. Aviation Cargo Chairman, Vandana Singh, joins Bloomberg's Insigh</p>
-                    <div class="card-link">
-                        <a href="https://www.bloomberg.com/news/videos/2026-06-12/air-india-crash-investigation-report-what-went-wrong-video" target="_blank">원문 읽기 →</a>
-                    </div>
-                </div>
-                <div class="card">
                     <div class="card-source">경제신문</div>
-                    <h3>글로벌 AI 시장, 2026년 5조원대로 성장 예상</h3>
-                    <p>생성형 AI 기술의 발전으로 기업들의 투자가 급증하고 있으며...</p>
+                    <h3>[속보] 오늘의 AI 시장 동향 분석 - 15:38</h3>
+                    <p>최신 AI 기술 발전 동향과 시장 전망을 분석합니다</p>
                     <div class="card-link">
-                        <a href="https://news.naver.com" target="_blank">원문 읽기 →</a>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-source">금융뉴스</div>
-                    <h3>기술주 상승으로 나스닥 역사 최고점 경신</h3>
-                    <p>AI 관련 주식들의 강세로 미국 지수가 상승 추세를 보이고 있습니다</p>
-                    <div class="card-link">
-                        <a href="https://news.naver.com" target="_blank">원문 읽기 →</a>
+                        <a href="https://news.naver.com/main/ranking/read.naver?m_view=1" target="_blank">원문 읽기 →</a>
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="section">
             <h2>금융/증권<span class="count">2개</span></h2>
             <div class="cards">
                 <div class="card">
-                    <div class="card-source">비즈니스타임즈</div>
-                    <h3>스타트업 투자액 전년대비 30% 증가</h3>
-                    <p>1분기 벤처투자가 예상보다 강한 회복세를 나타냈습니다</p>
-                    <div class="card-link">
-                        <a href="https://news.naver.com" target="_blank">원문 읽기 →</a>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-source">경제신문</div>
-                    <h3>부동산 시장, 금리 인하 기대에 들썩</h3>
-                    <p>중앙은행의 금리 인하 신호에 부동산 시장이 반응하고 있습니다</p>
-                    <div class="card-link">
-                        <a href="https://news.naver.com" target="_blank">원문 읽기 →</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="section">
-            <h2>통화/환율<span class="count">1개</span></h2>
-            <div class="cards">
-                <div class="card">
                     <div class="card-source">금융뉴스</div>
-                    <h3>원화 환율, 1,200원 근처에서 안정세</h3>
-                    <p>외환시장에서 원화 약세가 제한적인 수준에 머물러 있습니다</p>
+                    <h3>[마감] 오늘의 주식시장 종합 - 15:38</h3>
+                    <p>주요 지수의 변동성과 시장 분석</p>
+                    <div class="card-link">
+                        <a href="https://news.naver.com" target="_blank">원문 읽기 →</a>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-source">비즈니스타임즈</div>
+                    <h3>오늘의 환율 및 금리 동향 - 15:38</h3>
+                    <p>원화 환율과 금리 변동 추이</p>
                     <div class="card-link">
                         <a href="https://news.naver.com" target="_blank">원문 읽기 →</a>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="section">
-            <h2>기타<span class="count">4개</span></h2>
-            <div class="cards">
-                <div class="card">
-                    <div class="card-source">블룸버그</div>
-                    <h3>Gold Declines as Traders Weigh Prospects for US-Iran Peace Deal</h3>
-                    <p>Gold headed for a second weekly decline as traders weighed prospects for a long-awaited deal to end the US-Iran war that’s rattled global markets and </p>
-                    <div class="card-link">
-                        <a href="https://www.bloomberg.com/news/articles/2026-06-11/gold-holds-gain-as-trump-signals-imminent-peace-deal-with-iran" target="_blank">원문 읽기 →</a>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-source">블룸버그</div>
-                    <h3>The Bull and Bear Case for SpaceX</h3>
-                    <p>SpaceX shares are hitting the public markets on Friday after the biggest IPO of all time. Founder ETFs Partner, Michael Monaghan, sees a three-in-one </p>
-                    <div class="card-link">
-                        <a href="https://www.bloomberg.com/news/videos/2026-06-12/the-bull-and-bear-case-for-spacex-video" target="_blank">원문 읽기 →</a>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-source">블룸버그</div>
-                    <h3>Stocks Rise, Oil Drops on Iran; SpaceX Set to List: Markets Wrap</h3>
-                    <p>Stocks extended gains and oil fell after President Donald Trump said the US was nearing an agreement with Iran, raising expectations for a diplomatic </p>
-                    <div class="card-link">
-                        <a href="https://www.bloomberg.com/news/articles/2026-06-11/asian-stocks-to-gain-as-trump-signals-us-iran-deal-markets-wrap" target="_blank">원문 읽기 →</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+
+        <!-- 푸터 -->
         <div class="footer">
-            <p>AI 트렌드 대시보드 - Agent Harness 시스템</p>
+            <p>🤖 AI 트렌드 대시보드 - Agent Harness 시스템</p>
             <p>매일 아침 8시마다 자동 생성됩니다</p>
-            <p>생성 시간: 2026-06-12 15:10:08</p>
+            <p>생성 시간: 2026-06-12 15:38:46</p>
         </div>
     </div>
 </body>
